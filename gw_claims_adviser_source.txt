@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gulf War Veterans Claims Pathway Adviser</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: #111827; background: #fff; }
+.wrap { max-width: 800px; margin: 0 auto; padding: 24px 20px; }
+.hdr { border-bottom: 2px solid #1E3A5F; padding-bottom: 16px; margin-bottom: 20px; }
+.hdr h1 { font-size: 20px; color: #1E3A5F; margin-bottom: 4px; }
+.hdr p { font-size: 12px; color: #6B7280; line-height: 1.6; }
+.steps { display: flex; gap: 3px; margin-bottom: 20px; }
+.step { flex: 1; text-align: center; padding: 7px 0; font-size: 11px; font-weight: 600; border-bottom: 3px solid #E5E7EB; color: #D1D5DB; }
+.step.active { color: #1E3A5F; border-color: #1E3A5F; }
+.step.done { color: #1E3A5F; border-color: #3B82F6; cursor: pointer; }
+.step.done:hover { background: #F8FAFC; }
+h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.sub { font-size: 12px; color: #6B7280; margin-bottom: 14px; }
+.cats { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+.cat-btn { padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 3px; cursor: pointer; border: 1px solid #D1D5DB; background: #fff; color: #374151; }
+.cat-btn.on { border-color: #1E3A5F; background: #1E3A5F; color: #fff; }
+.clist { max-height: 420px; overflow-y: auto; border: 1px solid #E5E7EB; border-radius: 5px; padding: 8px 12px; }
+.citem { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; font-size: 13px; border-bottom: 1px solid #F3F4F6; }
+.citem .catl { margin-left: auto; font-size: 10px; color: #9CA3AF; }
+.star { color: #D97706; }
+.ebox { border: 1px solid #E5E7EB; border-radius: 5px; padding: 12px 16px; margin-bottom: 10px; background: #FAFAFA; }
+.ebox h3 { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+.erow { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; margin-bottom: 6px; }
+.radio-row { display: flex; align-items: flex-start; gap: 8px; padding: 4px 0; cursor: pointer; font-size: 13px; }
+.nav { margin-top: 16px; display: flex; justify-content: space-between; }
+.btn { padding: 10px 24px; font-size: 14px; font-weight: 600; border-radius: 5px; cursor: pointer; }
+.btn-p { border: none; background: #1E3A5F; color: #fff; }
+.btn-s { border: 1px solid #CBD5E1; background: #fff; color: #374151; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.alert { border-radius: 5px; padding: 14px 16px; margin-bottom: 14px; }
+.alert h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.alert p { font-size: 13px; line-height: 1.6; color: #1F2937; }
+.alert-crit { background: #FEF2F2; border: 1px solid #DC2626; }
+.alert-crit h3 { color: #991B1B; }
+.alert-warn { background: #FFFBEB; border: 1px solid #D97706; }
+.alert-warn h3 { color: #92400E; }
+.alert-info { background: #F0F4FF; border: 1px solid #6B7FB5; }
+.alert-info h3 { color: #1E3A5F; }
+.alert-ok { background: #F0FDF4; border: 1px solid #166534; color: #166534; font-size: 13px; line-height: 1.6; }
+.cond-card { border: 1px solid #D1D5DB; border-radius: 5px; padding: 16px 18px; margin-bottom: 16px; background: #fff; }
+.cond-card h3 { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.cond-meta { font-size: 11px; color: #6B7280; margin-bottom: 10px; }
+.cond-meta a { color: #1D4ED8; }
+.pathway { margin-bottom: 10px; }
+.pw-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.pw-name { font-size: 13px; font-weight: 600; }
+.pw-badge { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; }
+.pw-detail { font-size: 13px; line-height: 1.6; color: #374151; }
+.dbq-intel { background: #F8FAFC; border-radius: 4px; padding: 10px 12px; margin-top: 6px; border-left: 3px solid #3B82F6; }
+.dbq-intel h4 { font-size: 11px; font-weight: 700; color: #1E3A5F; margin-bottom: 4px; }
+.dbq-intel p { font-size: 12px; line-height: 1.6; color: #374151; margin-bottom: 5px; }
+.dbq-intel p:last-child { margin-bottom: 0; }
+.dbq-intel b { font-weight: 600; }
+.secondary-box { font-size: 12px; line-height: 1.6; color: #4B5563; margin-top: 8px; padding: 6px 10px; background: #FFFBEB; border-radius: 4px; border-left: 3px solid #D97706; }
+.note-box { font-size: 12px; line-height: 1.6; color: #4B5563; margin-top: 6px; padding: 6px 10px; background: #F9FAFB; border-radius: 4px; border-left: 3px solid #9CA3AF; }
+.framework { border-top: 2px solid #E5E7EB; margin-top: 20px; padding-top: 16px; }
+.framework h3 { font-weight: 700; font-size: 14px; color: #1E3A5F; margin-bottom: 8px; }
+.framework p { font-size: 13px; line-height: 1.7; color: #374151; margin-bottom: 10px; }
+.refs { margin-top: 16px; padding: 12px 16px; background: #F9FAFB; border-radius: 5px; border: 1px solid #E5E7EB; }
+.refs h4 { font-weight: 600; font-size: 12px; color: #6B7280; margin-bottom: 6px; }
+.refs p { font-size: 11px; line-height: 1.8; color: #6B7280; }
+.refs a { color: #1D4ED8; }
+input[type="checkbox"], input[type="radio"] { width: 17px; height: 17px; accent-color: #1D4ED8; cursor: pointer; flex-shrink: 0; }
+.hidden { display: none; }
+.export-bar { margin-top: 20px; padding: 16px; background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 5px; }
+.export-bar h4 { font-size: 13px; font-weight: 600; color: #1E3A5F; margin-bottom: 10px; }
+.export-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.exp-btn { padding: 8px 16px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; border-radius: 4px; cursor: pointer; background: #fff; color: #374151; }
+.exp-btn:hover { background: #F1F5F9; }
+@media print {
+  .steps, .nav, .export-bar, #restart, .hdr p { display: none !important; }
+  .wrap { max-width: 100%; padding: 0; }
+  .hdr { border-bottom: 1px solid #000; }
+  .hdr h1 { font-size: 18pt; color: #000; }
+  body { font-size: 11pt; color: #000; }
+  .alert { border: 1px solid #666; break-inside: avoid; }
+  .cond-card { break-inside: avoid; border: 1px solid #999; }
+  a { color: #000; text-decoration: underline; }
+  .pw-badge { border: 1px solid #666; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>Gulf War Veterans Claims Pathway Adviser</h1>
+    <p>Informational guidance on filing pathways under 38 C.F.R. &sect; 3.317 and direct service connection with DBQ-specific intelligence. Not legal advice. Not a substitute for a Veterans Service Officer or accredited claims attorney.</p>
+  </div>
+  <div class="steps" id="stepNav"></div>
+  <div id="step0"></div>
+  <div id="step1" class="hidden"></div>
+  <div id="step2" class="hidden"></div>
+  <div id="step3" class="hidden"></div>
+</div>
+<script>
+const VA = "https://www.benefits.va.gov/compensation/docs/";
+const FORM_URL = "https://www.va.gov/vaforms/medical/pdf/VA_Form_10-10176.pdf";
+const DBQ_PAGE = "https://www.benefits.va.gov/COMPENSATION/dbq_disabilityexams.asp";
+
+const C = [
+  {id:"cfs",label:"Chronic Fatigue Syndrome",cat:"Rheumatological",m:1,dbq:"Chronic_Fatigue_Syndrome.pdf",
+   test:"Exclusion of all other clinical conditions producing similar symptoms (history, physical exam, lab tests). VA criteria: debilitating fatigue reducing daily activity to less than 50% for 6+ months, plus 6 of 10 listed criteria including acute onset, low grade fever, pharyngitis, lymph nodes, muscle weakness, post-exercise fatigue, headaches, joint pain, neuropsychologic symptoms, sleep disturbance.",
+   rate:"Symptom frequency (nearly constant vs. wax/wane), restriction of daily activities as percentage of pre-illness level, and incapacitating episodes requiring bed rest and physician treatment. Highest rating requires nearly constant symptoms restricting activities almost completely and occasionally precluding self-care.",
+   sec:[]},
+  {id:"fibro",label:"Fibromyalgia",cat:"Neurological",m:1,dbq:"Fibromyalgia.pdf",
+   test:"Trigger point (tender point) examination. Widespread musculoskeletal pain documented in both sides of body, above and below waist, and axial skeleton. No specific lab test required.",
+   rate:"Three tiers: no symptoms, episodic with exacerbations, constant or near-constant. Whether symptoms are refractory to therapy drives the highest rating. Continuous medication requirement. Assistive device use (wheelchair, brace, crutch, cane, walker).",
+   sec:[]},
+  {id:"ibs",label:"Irritable Bowel Syndrome (IBS)",cat:"Gastrointestinal",m:1,dbq:"intestines.pdf",
+   test:"Functional GI disorders under Section 3.317 require symptoms unexplained by structural, endoscopic, laboratory, or other objective signs. Structural diseases (Crohn's disease, ulcerative colitis) expressly excluded. Diagnosis per established medical principles.",
+   rate:"Frequency and severity of episodes, alternating diarrhea and constipation, abdominal distress. More or less constant abdominal distress produces the highest rating.",
+   sec:[]},
+  {id:"sleep",label:"Sleep Apnea",cat:"Respiratory",m:0,dbq:"Sleep_Apnea.pdf",
+   test:"MANDATORY: Sleep study required for diagnosis. No sleep study in the record means no confirmed diagnosis and no rating. Results must be documented before C&P examination.",
+   rate:"Tiers: persistent daytime hypersomnolence (lowest compensable); requires CPAP or breathing assistance device (middle); chronic respiratory failure with CO2 retention, cor pulmonale, or requires tracheostomy (highest).",
+   sec:["Heart Conditions"]},
+  {id:"migraine",label:"Headaches / Migraines",cat:"Neurological",m:0,dbq:"Headaches_Including_Migraines.pdf",
+   test:"Diagnostic testing not required by DBQ. Rating based on clinical history and reported frequency and severity of attacks.",
+   rate:"Driven entirely by frequency of prostrating attacks. VA defines prostrating as causing extreme exhaustion, powerlessness, debilitation, or incapacitation with substantial inability to engage in ordinary activities. Completely prostrating AND prolonged attacks with economic inadaptability produces 50% (maximum schedular). Document frequency over several months.",
+   sec:[]},
+  {id:"tinnitus",label:"Tinnitus",cat:"ENT",m:0,dbq:null,
+   test:"Hearing Loss and Tinnitus DBQ is restricted (not publicly available). Only VA or contract examiners can complete it. Audiometric testing required.",
+   rate:"Flat 10% rating under DC 6260 regardless of whether unilateral or bilateral. This is the maximum schedular rating for tinnitus.",
+   sec:[]},
+  {id:"hearing",label:"Hearing Loss",cat:"ENT",m:0,dbq:null,
+   test:"Restricted DBQ. Requires controlled speech discrimination test (Maryland CNC) and puretone audiometric test by state-licensed audiologist.",
+   rate:"Rated on audiometric test results using Table VI (numeric designation by puretone average and speech discrimination) and Table VII (percentage evaluation). The specific numbers from testing directly determine the rating.",
+   sec:[]},
+  {id:"skin",label:"Skin Condition (dermatitis, eczema, rashes)",cat:"Dermatological",m:0,dbq:"Skin_Diseases.pdf",
+   test:"Physical exam documenting percentage of total body area and exposed body area (face, neck, hands) affected. Medication history: type, route, duration in past 12 months.",
+   rate:"Two rating tracks: (1) percentage of body area and exposed area affected, (2) type and duration of treatment. Systemic corticosteroids or immunosuppressives used constant/near-constant for 12 months produces higher ratings than topical-only treatment.",
+   sec:["Scars/Disfigurement"]},
+  {id:"joint",label:"Joint / Muscle Pain (unspecified)",cat:"Musculoskeletal",m:0,dbq:null,
+   test:"Depends on joint(s) affected. Each joint has its own DBQ with range-of-motion testing. Pain must be documented during testing. If no specific joint is identified, may qualify under undiagnosed illness pathway.",
+   rate:"Limitation of motion with consideration of painful motion, functional loss, and flare-ups. DeLuca factors (pain, weakness, fatigability, incoordination) must be addressed by examiner.",
+   sec:[]},
+  {id:"cognitive",label:"Memory / Cognitive Difficulties",cat:"Neurological",m:0,dbq:"Mental_Disorders.pdf",
+   test:"Mental status examination. If TBI is documented, examiner must differentiate cognitive symptoms attributable to TBI versus mental health disorder versus other cause.",
+   rate:"If evaluated under mental disorders: occupational and social impairment tier (0% through 100%). If TBI: separate rating criteria. The TBI differentiation question on the DBQ determines which rating schedule applies. This distinction significantly affects the rating outcome.",
+   sec:[]},
+  {id:"resp",label:"Respiratory Condition (asthma, COPD, bronchitis)",cat:"Respiratory",m:0,dbq:"Respiratory_Conditions_Other_than_Tuberculosis_and_Sleep_Apnea.pdf",
+   test:"Pulmonary Function Testing (PFT) required in most cases. PFT results (FEV-1, FEV-1/FVC, DLCO) are the primary basis for rating. PFT not required if veteran already requires outpatient oxygen, has cor pulmonale, or has pulmonary hypertension.",
+   rate:"Rated on PFT results. Also considers frequency of physician visits, courses of systemic corticosteroids, oxygen therapy requirements, and incapacitating episodes for bronchiectasis.",
+   sec:["Heart Conditions"]},
+  {id:"gerd",label:"GERD / Acid Reflux",cat:"Gastrointestinal",m:0,dbq:"esophageal-disorders.pdf",
+   test:"May require endoscopy or other diagnostic studies to distinguish from structural GI diseases.",
+   rate:"Severity of symptoms (pain, vomiting, dysphagia, hematemesis, melena, weight loss, anemia) and whether symptoms are persistently recurrent with substernal, arm, or shoulder pain.",
+   sec:[]},
+  {id:"anxiety",label:"Anxiety / Depression (non-PTSD)",cat:"Psychological",m:0,dbq:"Mental_Disorders.pdf",
+   test:"Mental status examination by qualified mental health professional. Examiner must differentiate symptoms if multiple mental health diagnoses exist or if TBI is present.",
+   rate:"Single scale for all mental disorders based on occupational and social impairment: 0% (diagnosed, no impairment), 10% (mild/transient), 30% (occasional decrease), 50% (reduced reliability), 70% (deficiencies in most areas), 100% (total occupational and social impairment). Examiner selects one tier.",
+   sec:[]},
+  {id:"ptsd",label:"PTSD",cat:"Psychological",m:0,dbq:"PTSD_Review.pdf",
+   test:"Initial PTSD DBQ is restricted (VA/contract examiner only). Review PTSD DBQ is public. Requires verified stressor (relaxed for combat veterans under 38 U.S.C. Section 1154(b)).",
+   rate:"Same 0% through 100% occupational and social impairment scale as other mental disorders. PTSD has its own regulatory framework under 38 C.F.R. Section 3.304(f), separate from Gulf War presumptive.",
+   sec:[]},
+  {id:"neuro",label:"Peripheral Neuropathy",cat:"Neurological",m:0,dbq:"Peripheral_Nerves.pdf",
+   test:"Nerve conduction studies and/or EMG if available. Physical exam: muscle strength testing (0 through 5 scale), reflex exam (0 through 4+), sensory exam, trophic changes assessment.",
+   rate:"VA distinguishes neuralgia (intermittent, dull pain) from neuritis (constant pain, muscle atrophy, sensory disturbances, loss of reflexes). Each affected nerve rated separately. Severity: mild, moderate, moderately severe, severe (complete paralysis). Upper vs. lower extremity and dominant vs. non-dominant hand affect the percentage.",
+   sec:[]},
+  {id:"diabetes",label:"Diabetes Mellitus",cat:"Endocrinological",m:0,dbq:"Diabetes_Mellitus.pdf",
+   test:"Fasting plasma glucose, A1C (two or more occasions), glucose tolerance test if completed. Results must be in the record.",
+   rate:"Rated by management requirements: diet only (lowest), oral medication, insulin with regulation of activities (higher), insulin with hospitalizations for ketoacidosis or hypoglycemia (highest). Each complication rated separately under its own DBQ.",
+   sec:["Peripheral Nerves (diabetic neuropathy)","Kidney","Eye Conditions","Skin Diseases","Heart Conditions","Artery and Vein","Hypertension"]},
+  {id:"thyroid",label:"Thyroid / Parathyroid Condition",cat:"Endocrinological",m:0,dbq:"Thyroid_and_Parathyroid.pdf",
+   test:"TSH, Free T4, Free T3, thyroid antibodies, PTH, calcium, ionized calcium. Imaging (ultrasound, CT, MRI) if indicated. Reflex exam (0 through 4+ at biceps, knee, triceps, ankle, brachioradialis).",
+   rate:"Hypothyroidism and hyperthyroidism rated by residuals affecting specific body systems. Each affected system evaluated under its own DBQ. Thyroid enlargement with disfigurement rated separately.",
+   sec:["Heart Conditions","Eye Conditions","Mental Disorders","Skin Diseases","Musculoskeletal"]},
+  {id:"heart",label:"Heart Condition",cat:"Cardiovascular",m:0,dbq:"Heart.pdf",
+   test:"METs testing required (exercise stress test or interview-based). Echocardiogram for LVEF (left ventricular ejection fraction). ECG/EKG. Three blood pressure readings.",
+   rate:"Rated primarily by METs level at which symptoms develop (breathlessness, fatigue, angina, dizziness, syncope) and LVEF percentage. Also: heart failure hospitalizations, pacemaker implantation, cardiac surgery, valve conditions, arrhythmias.",
+   sec:[]},
+  {id:"htn",label:"Hypertension",cat:"Cardiovascular",m:0,dbq:"hypertension.pdf",
+   test:"Three blood pressure readings on examination day. History of diastolic and systolic readings.",
+   rate:"Rated by diastolic and systolic readings. Diastolic predominantly 130 or higher, or systolic predominantly 200 or higher produces the highest rating. Whether continuous medication is required for control.",
+   sec:[]},
+  {id:"gulf_inf",label:"Persian Gulf Infectious Disease",cat:"Infectious",m:0,dbq:"Persian_Gulf_Afghanistan_Infectious_Diseases.pdf",
+   test:"Disease-specific diagnostic confirmation required for initial diagnosis AND any relapse or recurrence. Brucellosis: culture or serology. Malaria: blood smear or molecular testing. Leishmaniasis: culture, histopathology, or lab testing.",
+   rate:"Rated by whether disease is active or resolved. Residuals rated under appropriate body system DBQs. This is the only public DBQ that explicitly references 38 C.F.R. 4.88(b) and 38 C.F.R. 3.317(d) for residual evaluation.",
+   sec:[]},
+  {id:"hemato",label:"Hematologic / Lymphatic Condition",cat:"Hematologic",m:0,dbq:"Hematologic_and_Lymphatic_Conditions_Including_Leukemia.pdf",
+   test:"CBC, bone marrow biopsy if indicated, imaging studies. Transfusion history and frequency.",
+   rate:"Leukemia and lymphoma rated by treatment status (active, in remission). Anemia rated by hemoglobin levels and transfusion requirements. Thrombocytopenia rated by platelet counts and bleeding episodes.",
+   sec:[]},
+  {id:"eye",label:"Eye Condition",cat:"Ophthalmological",m:0,dbq:"Eye_Conditions.pdf",
+   test:"Must be completed by ophthalmologist or optometrist. Visual acuity, visual field testing, tonometry for glaucoma, fundoscopic examination.",
+   rate:"Rated by visual acuity loss, visual field loss, or other impairment. Incapacitating episodes framework applies. Each eye evaluated separately.",
+   sec:[]},
+  {id:"narco",label:"Narcolepsy",cat:"Neurological",m:0,dbq:"Narcolepsy.pdf",
+   test:"Polysomnogram (PSG), Multiple Sleep Latency Test (MSLT), and/or hypocretin level in cerebrospinal fluid.",
+   rate:"Rated by frequency of cataplectic (narcoleptic) episodes per week. Also evaluates seizure history. More than 10 episodes per week produces the highest rating.",
+   sec:[]},
+  {id:"als",label:"ALS (Lou Gehrig's Disease)",cat:"Neurological",m:0,dbq:"ALS_Lou_Gehrigs_Disease.pdf",
+   test:"EMG, nerve conduction studies, PFT for respiratory involvement. ALS is a presumptive condition for all veterans with 90 or more days of continuous active service.",
+   rate:"Rated at 100% from date of diagnosis. Residuals affecting multiple body systems each evaluated separately: upper/lower extremity weakness, speech and swallowing, respiratory function, sphincter control, bowel incontinence.",
+   sec:["Respiratory Conditions","Peripheral Nerves"]},
+  {id:"parkinson",label:"Parkinson's Disease",cat:"Neurological",m:0,dbq:"Parkinsons_Disease.pdf",
+   test:"Neurological examination documenting tremor, rigidity, bradykinesia, balance, gait. Parkinson's is a presumptive condition for veterans with toxic exposure under PACT Act.",
+   rate:"Motor manifestations (tremor, rigidity, bradykinesia, balance impairment, abnormal gait), digestive (swallowing dysfunction), urinary, speech changes, sleep disturbance, and autonomic dysfunction. Each manifestation evaluated for severity.",
+   sec:["Mental Disorders","Eye Conditions"]},
+  {id:"arthritis",label:"Arthritis",cat:"Rheumatological",m:0,dbq:"Arthritis.pdf",
+   test:"X-rays or imaging, lab work (rheumatoid factor, ESR, CRP). Range of motion testing with goniometer.",
+   rate:"Degenerative: X-ray evidence plus limitation of motion or painful motion. Rheumatoid: rated as active process (frequency of incapacitating exacerbations) or chronic residuals (joint involvement and functional limitation).",
+   sec:[]},
+  {id:"sle",label:"Systemic Lupus / Autoimmune Disease",cat:"Rheumatological",m:0,dbq:"Systemic_Lupus_Erythematosus_and_Other_Autoimmune_Diseases.pdf",
+   test:"Lab work (ANA, anti-dsDNA, complement levels), organ function tests for affected systems.",
+   rate:"Frequency of exacerbations and whether symptoms are acute or chronic. Affected organ systems evaluated separately under their own DBQs.",
+   sec:["Kidney","Heart Conditions","Skin Diseases","Eye Conditions"]},
+  {id:"back",label:"Back (Thoracolumbar Spine)",cat:"Musculoskeletal",m:0,dbq:"Back_Thoracolumbar_Spine.pdf",
+   test:"Range of motion testing with goniometer. Pain documented. Imaging if available. Neurological testing for radiculopathy.",
+   rate:"Forward flexion range of motion, combined ROM, muscle spasm, guarding, abnormal gait, abnormal spinal contour. IVDS rated by incapacitating episodes requiring physician-prescribed bed rest. Radiculopathy rated separately under Peripheral Nerves.",
+   sec:["Peripheral Nerves"]},
+  {id:"neck",label:"Neck (Cervical Spine)",cat:"Musculoskeletal",m:0,dbq:"Neck_Conditions_Cervical_Spine.pdf",
+   test:"Range of motion testing. Imaging if available. Neurological testing.",
+   rate:"Same framework as back: forward flexion, combined ROM, muscle spasm, guarding. IVDS evaluated separately. Upper extremity radiculopathy rated under Peripheral Nerves.",
+   sec:["Peripheral Nerves"]},
+  {id:"knee",label:"Knee / Lower Leg",cat:"Musculoskeletal",m:0,dbq:"Knee_and_Lower_Leg.pdf",
+   test:"Range of motion testing (flexion and extension), joint stability testing, imaging.",
+   rate:"Multiple rating codes possible for one knee: limitation of flexion, limitation of extension, instability or subluxation, meniscal conditions. Separate ratings for different functional impairments in the same joint are permitted.",
+   sec:[]},
+  {id:"shoulder",label:"Shoulder / Arm",cat:"Musculoskeletal",m:0,dbq:"Shoulder_and_or_Arm.pdf",
+   test:"Range of motion testing, stability testing, imaging.",
+   rate:"Dominant versus non-dominant arm affects rating percentage. Limitation of motion, ankylosis, recurrent dislocation, malunion.",
+   sec:[]},
+  {id:"sinus",label:"Sinusitis / Rhinitis",cat:"ENT",m:0,dbq:"Sinusitis_Rhinitis_and_Other_Conditions_of_the_Nose_Throat_Larynx_and_Pharynx.pdf",
+   test:"Physical exam, imaging if available. Documentation of episode frequency.",
+   rate:"Number of incapacitating and non-incapacitating episodes per year, surgery requirement, and whether obstructive.",
+   sec:[]},
+  {id:"urinary",label:"Urinary / Bladder Condition",cat:"Genitourinary",m:0,dbq:"Urinary_Tract_Conditions.pdf",
+   test:"Urinalysis, imaging if indicated. Voiding frequency documentation.",
+   rate:"Voiding frequency (daytime and nighttime intervals), use of absorbent materials, catheterization requirement. Recurrent UTIs rated by frequency and treatment.",
+   sec:[]},
+  {id:"smell",label:"Loss of Smell and/or Taste",cat:"ENT",m:0,dbq:"Loss_of_Sense_of_Smell_and_or_Taste.pdf",
+   test:"Clinical testing of olfactory and gustatory function.",
+   rate:"Complete loss of smell (anosmia) rated at 10%. Complete loss of taste (ageusia) rated at 10%.",
+   sec:[]},
+];
+
+const MUCMI = ["cfs","fibro","ibs"];
+const STR = {strong:{c:"#166534",bg:"#DCFCE7",l:"Strong Pathway"},applicable:{c:"#1D4ED8",bg:"#DBEAFE",l:"Applicable"},possible:{c:"#92400E",bg:"#FEF3C7",l:"Evidence Needed"}};
+
+let state = { step:0, sel:[], ev:{}, status:"none", t75:false, wriisc:false, reg:false, catF:"All" };
+
+function cats(){ let s=new Set(C.map(c=>c.cat)); return ["All",...[...s].sort()]; }
+
+function getPaths(id){
+  let e=state.ev[id]||{}, info=C.find(c=>c.id===id), p=[], n=[];
+  let dx=e.diagnosed, nx=e.nexus, lb=e.labWork, isM=MUCMI.includes(id);
+  if(dx&&nx) p.push({name:"Direct Service Connection",str:"strong",d:"Diagnosis and nexus opinion on file. Typically the strongest pathway. Evaluated on its own merits without relying on the Gulf War presumptive framework."});
+  else if(dx&&!nx) p.push({name:"Direct Service Connection",str:"possible",d:"Diagnosis exists but no nexus opinion linking the condition to service. A medical professional would need to provide a written opinion that the condition is at least as likely as not related to military service."});
+  if(!dx){
+    p.push({name:"Undiagnosed Illness (\u00a7 3.317(a)(2)(i)(A))",str:"applicable",d:"No formal diagnosis attributed. May qualify as an undiagnosed illness if the condition cannot be attributed to any known clinical diagnosis by history, physical examination, and laboratory tests. No nexus opinion required under this pathway."});
+    if(!lb) n.push("The regulation requires that the condition cannot be attributed to a known clinical diagnosis by history, physical examination, AND laboratory tests. If lab testing has not been performed, the examiner cannot properly make this determination. Request appropriate testing before the C&P examination.");
+  }
+  if(dx&&isM) p.push({name:"MUCMI (\u00a7 3.317(a)(2)(i)(B))",str:"strong",d:info.label+" is specifically named in the regulation as a medically unexplained chronic multisymptom illness. This pathway exists for diagnosed conditions lacking conclusive pathophysiology or etiology. No nexus opinion required."});
+  else if(dx&&!isM) p.push({name:"MUCMI (\u00a7 3.317(a)(2)(i)(B))",str:"possible",d:"Diagnosed condition not specifically named in the regulation, but the MUCMI pathway accommodates any diagnosed condition lacking conclusive pathophysiology or etiology, characterized by overlapping symptoms and signs, with features including fatigue, pain, disability out of proportion to physical findings, and inconsistent laboratory abnormalities."});
+  if(id==="ptsd") n.push("PTSD has its own framework under 38 C.F.R. Section 3.304(f) and is not typically filed under Gulf War presumptive. Combat veterans who served in a war zone have relaxed stressor verification.");
+  if(id==="als") n.push("ALS is a presumptive condition for all veterans with 90 or more days of continuous active service under 38 U.S.C. Section 1118. Rated at 100% from date of diagnosis.");
+  if(id==="tinnitus"||id==="hearing") n.push("The Hearing Loss and Tinnitus DBQ is restricted and not publicly available. Only VA or contract examiners can complete it.");
+  return {p,n};
+}
+
+function render(){
+  let sn=document.getElementById("stepNav");
+  sn.innerHTML=["Conditions","Evidence","Status","Analysis"].map((l,i)=>{
+    let cls=i===state.step?"step active":i<state.step?"step done":"step";
+    return `<div class="${cls}" data-s="${i}">${i<state.step?"\u2713 ":""}${l}</div>`;
+  }).join("");
+  sn.querySelectorAll(".done").forEach(el=>{
+    el.onclick=()=>{ state.step=parseInt(el.dataset.s); render(); };
+  });
+
+  for(let i=0;i<4;i++) document.getElementById("step"+i).className=i===state.step?"":"hidden";
+
+  if(state.step===0) renderStep0();
+  if(state.step===1) renderStep1();
+  if(state.step===2) renderStep2();
+  if(state.step===3) renderStep3();
+}
+
+function renderStep0(){
+  let d=document.getElementById("step0");
+  let fc=cats();
+  let fl=state.catF==="All"?C:C.filter(c=>c.cat===state.catF);
+  d.innerHTML=`<h2>Select conditions you are experiencing or have been diagnosed with.</h2>
+    <p class="sub">Filter by body system or scroll through all. Conditions named in the Gulf War presumptive regulation are marked with a star (\u2605).</p>
+    <div class="cats">${fc.map(c=>`<button class="cat-btn${state.catF===c?" on":""}" data-cat="${c}">${c}</button>`).join("")}</div>
+    <div class="clist">${fl.map(c=>`<label class="citem"><input type="checkbox" ${state.sel.includes(c.id)?"checked":""} data-id="${c.id}">${c.m?'<span class="star">\u2605</span>':""}<span>${c.label}</span><span class="catl">${c.cat}</span></label>`).join("")}</div>
+    <div class="nav"><span></span><button class="btn btn-p" ${!state.sel.length?"disabled":""} id="next0">Next: Evidence</button></div>`;
+  d.querySelectorAll(".cat-btn").forEach(b=>{ b.onclick=()=>{ state.catF=b.dataset.cat; render(); }; });
+  d.querySelectorAll("input[type=checkbox]").forEach(cb=>{ cb.onchange=()=>{
+    let id=cb.dataset.id;
+    if(cb.checked&&!state.sel.includes(id)) state.sel.push(id);
+    else state.sel=state.sel.filter(x=>x!==id);
+    render();
+  };});
+  let nb=document.getElementById("next0"); if(nb) nb.onclick=()=>{ state.step=1; render(); };
+}
+
+function renderStep1(){
+  let d=document.getElementById("step1");
+  d.innerHTML=`<h2>Evidence on file for each condition.</h2><p class="sub">Answer based on what is documented in your medical record.</p>
+    ${state.sel.map(id=>{let c=C.find(x=>x.id===id), e=state.ev[id]||{}; return `<div class="ebox"><h3>${c.m?'<span class="star">\u2605 </span>':""}${c.label}</h3>
+      <label class="erow"><input type="checkbox" data-id="${id}" data-f="diagnosed" ${e.diagnosed?"checked":""}> Formal diagnosis from a medical professional</label>
+      <label class="erow"><input type="checkbox" data-id="${id}" data-f="nexus" ${e.nexus?"checked":""}> Nexus letter or medical opinion linking this to service</label>
+      <label class="erow"><input type="checkbox" data-id="${id}" data-f="labWork" ${e.labWork?"checked":""}> Laboratory or diagnostic testing completed</label>
+    </div>`;}).join("")}
+    <div class="nav"><button class="btn btn-s" id="back1">Back</button><button class="btn btn-p" id="next1">Next: Status</button></div>`;
+  d.querySelectorAll("input[type=checkbox]").forEach(cb=>{ cb.onchange=()=>{
+    let id=cb.dataset.id, f=cb.dataset.f;
+    if(!state.ev[id]) state.ev[id]={};
+    state.ev[id][f]=cb.checked;
+  };});
+  document.getElementById("back1").onclick=()=>{ state.step=0; render(); };
+  document.getElementById("next1").onclick=()=>{ state.step=2; render(); };
+}
+
+function renderStep2(){
+  let d=document.getElementById("step2");
+  let opts=[{v:"none",l:"No Gulf War illness claim filed"},{v:"receiving_undiagnosed",l:"Currently receiving benefits under the undiagnosed illness pathway"},{v:"receiving_mucmi",l:"Currently receiving under MUCMI pathway (CFS, fibromyalgia, functional GI)"},{v:"receiving_direct",l:"Have direct service connection for some conditions"},{v:"denied",l:"Gulf War illness claim previously denied"},{v:"pending",l:"Claim currently pending"}];
+  d.innerHTML=`<h2>Current claims and medical record status.</h2><p class="sub">Affects which warnings and considerations apply.</p>
+    <div style="margin-bottom:16px"><div style="font-weight:600;font-size:13px;margin-bottom:8px">Gulf War related disability compensation status:</div>
+    ${opts.map(o=>`<label class="radio-row"><input type="radio" name="status" value="${o.v}" ${state.status===o.v?"checked":""}>${o.l}</label>`).join("")}</div>
+    <div class="ebox">
+      <label class="erow"><input type="checkbox" id="t75" ${state.t75?"checked":""}> ICD-10-CM code T75.830 has been applied to my medical record</label>
+      <label class="erow"><input type="checkbox" id="wriisc" ${state.wriisc?"checked":""}> Evaluated at a War Related Illness and Injury Study Center (WRIISC)</label>
+      <label class="erow"><input type="checkbox" id="reg" ${state.reg?"checked":""}> Completed a Gulf War Registry examination (VA Form 10-10176)</label>
+    </div>
+    <div class="nav"><button class="btn btn-s" id="back2">Back</button><button class="btn btn-p" id="next2">View Analysis</button></div>`;
+  d.querySelectorAll("input[name=status]").forEach(r=>{ r.onchange=()=>{ state.status=r.value; }; });
+  document.getElementById("t75").onchange=function(){ state.t75=this.checked; };
+  document.getElementById("wriisc").onchange=function(){ state.wriisc=this.checked; };
+  document.getElementById("reg").onchange=function(){ state.reg=this.checked; };
+  document.getElementById("back2").onclick=()=>{ state.step=1; render(); };
+  document.getElementById("next2").onclick=()=>{ state.step=3; render(); };
+}
+
+function renderStep3(){
+  let d=document.getElementById("step3");
+  let h=`<h2 style="margin-bottom:12px">Claims Pathway Analysis</h2>`;
+  let hasDxInUndx=state.status==="receiving_undiagnosed"&&state.sel.some(id=>(state.ev[id]||{}).diagnosed);
+  if(hasDxInUndx) h+=`<div class="alert alert-crit"><h3>\u26A0 Diagnostic Imperative: Potential Impact on Current Benefits</h3><p>You are receiving benefits under the undiagnosed illness pathway and one or more conditions now carry a diagnosis. Under the regulation, a condition qualifies as an undiagnosed illness only if it cannot be attributed to a known clinical diagnosis. A new diagnosis could affect the basis for that specific benefit. However, the MUCMI pathway under Section 3.317(a)(2)(i)(B) accommodates diagnosed conditions meeting its criteria. Consult a VSO or accredited attorney before taking any action affecting your existing rating.</p></div>`;
+  if(state.t75) h+=`<div class="alert alert-crit"><h3>\u26A0 ICD-10-CM Code T75.830 in Your Record</h3><p>No VA rating schedule is attached to this code. No disability benefits questionnaire criteria are tied to it. No instruction exists in the Adjudication Procedures Manual on how examiners or claims processors should incorporate it into determinations under Section 3.317. An examiner could interpret this code as constituting a known clinical diagnosis, closing the undiagnosed illness pathway. No Secretary-level directive has been issued clarifying that T75.830 does not constitute a known clinical diagnosis. Discuss with a VSO or accredited attorney before filing or modifying any claim.</p></div>`;
+  if(state.status==="denied") h+=`<div class="alert alert-warn"><h3>Previously Denied Claim</h3><p>GAO documented in 2017 (GAO-17-511) that denial letters for Gulf War illness claims often failed to explain whether both direct and presumptive service connection methods were considered. Review your denial letter for this specific issue. A supplemental claim with new and relevant evidence, or a Higher Level Review, may be appropriate depending on the original denial basis.</p></div>`;
+
+  h+=`<div class="alert alert-info"><h3>Gulf War General Medical Examination DBQ Is Not Publicly Available</h3><p>If VA schedules a Gulf War General Medical Examination as part of your claim, the DBQ used by the examiner is restricted and cannot be obtained or reviewed in advance. The VA OIG documented in September 2023 (VAOIG-22-02194-152) that this questionnaire does not include questions showing how a condition meets the requirements of Section 3.317, does not define medically unexplained illness, and does not require necessary laboratory or diagnostic testing. Claims processors reported that it provides little to no value for making a decision. Every condition-specific DBQ listed below IS publicly available and can be submitted with private medical evidence.</p></div>`;
+
+  if(state.wriisc) h+=`<div class="alert alert-ok"><b>WRIISC Evaluation on Record.</b> WRIISC clinicians specialize in post-deployment health and military environmental exposures. If the evaluation included diagnostic conclusions or nexus-relevant observations, ensure these are included in any claims submission.</div>`;
+
+  if(!state.reg) h+=`<div class="alert alert-warn"><h3>Gulf War Registry Examination Not Completed</h3><p>The Gulf War Registry, authorized under 38 U.S.C. Section 1117, is a free clinical examination available to any veteran who served in the Southwest Asia theater of operations. The examination generates documented medical evidence within VA's system that can support a subsequent disability claim. The registry has over 80,000 enrolled veterans and 35 years of accumulated clinical data. Completing the examination does not affect any existing benefits and is separate from filing a claim. Request a Gulf War Registry examination at any VA medical center. <a href="${FORM_URL}" target="_blank" style="color:#1D4ED8;font-weight:600">Download VA Form 10-10176 (PDF)</a></p></div>`;
+  else h+=`<div class="alert alert-ok"><b>Gulf War Registry Examination on Record.</b> Your registry examination created documented clinical data within VA's system under the Gulf War Registry (93VA131). This clinical record exists independently of any disability claim and can provide supporting medical evidence. Ensure findings from your registry examination are included in any claims submission.</div>`;
+
+  h+=`<p style="font-size:13px;color:#6B7280;margin-bottom:14px">VBA claims processing failures documented in GAO-17-511 (2017), VAOIG-22-02194-152 (2023), and VAOIG-23-03485-03 (2025). If denied, verify all applicable pathways were considered.</p>`;
+
+  state.sel.forEach(id=>{
+    let info=C.find(c=>c.id===id), e=state.ev[id]||{}, {p:paths,n:notes}=getPaths(id);
+    let meta=[e.diagnosed?"Diagnosed":"Not formally diagnosed"];
+    if(e.nexus) meta.push("Nexus on file");
+    if(e.labWork) meta.push("Testing completed");
+    let dbqLink=info.dbq?` &middot; <a href="${VA+info.dbq}" target="_blank">Download DBQ (PDF)</a>`:` &middot; DBQ restricted (VA examiner only)`;
+
+    h+=`<div class="cond-card"><h3>${info.m?'<span class="star">\u2605 </span>':""}${info.label}</h3>`;
+    h+=`<div class="cond-meta">${meta.join(" &middot; ")}${dbqLink}</div>`;
+    paths.forEach(pw=>{
+      h+=`<div class="pathway"><div class="pw-hdr"><span class="pw-name" style="color:${STR[pw.str].c}">${pw.name}</span><span class="pw-badge" style="color:${STR[pw.str].c};background:${STR[pw.str].bg}">${STR[pw.str].l}</span></div><div class="pw-detail">${pw.d}</div></div>`;
+    });
+    h+=`<div class="dbq-intel"><h4>What the Examiner Will Evaluate</h4><p><b>Required Testing:</b> ${info.test}</p><p><b>What Drives the Rating:</b> ${info.rate}</p></div>`;
+    if(info.sec&&info.sec.length) h+=`<div class="secondary-box"><b>Secondary Conditions to Evaluate:</b> ${info.label} can generate additional rated conditions. Each complication is evaluated under its own DBQ: ${info.sec.join(", ")}. Ensure the examiner documents all complications and that separate DBQs are completed for each affected body system.</div>`;
+    notes.forEach(n=>{ h+=`<div class="note-box">${n}</div>`; });
+    h+=`</div>`;
+  });
+
+  h+=`<div class="framework"><h3>The Two Presumptive Pathways Under Section 3.317</h3><p>38 C.F.R. Section 3.317 contains two distinct presumptive pathways. Subsection (a)(2)(i)(A) covers undiagnosed illnesses: conditions that cannot be attributed to any known clinical diagnosis by history, physical examination, and laboratory tests. Subsection (a)(2)(i)(B) covers medically unexplained chronic multisymptom illnesses (MUCMI): diagnosed conditions without conclusive pathophysiology or etiology. CFS, fibromyalgia, and functional gastrointestinal disorders are specifically named as qualifying MUCMI conditions. Under either presumptive pathway, no nexus opinion is required because the regulation presumes service connection. Direct service connection remains available for any condition and requires a current diagnosis, an in-service event or exposure, and a medical nexus opinion.</p><p>A Veterans Service Officer or accredited claims attorney can review your complete record and advise on the strategy most likely to succeed. This tool identifies possible pathways and explains what examiners will evaluate, but cannot account for the full complexity of individual claims adjudication.</p></div>`;
+
+  h+=`<div class="refs"><h4>Regulatory and Oversight References</h4><p>38 C.F.R. &sect; 3.317 &middot; 38 U.S.C. &sect; 1117 &middot; 38 C.F.R. &sect; 3.304(f) (PTSD) &middot; GAO-17-511 (June 2017) &middot; VAOIG-22-02194-152 (September 2023) &middot; VAOIG-23-03485-03 (2025) &middot; PACT Act, Pub. L. No. 117-168 (2022) &middot; <a href="${DBQ_PAGE}" target="_blank">VA Public DBQ Page</a> &middot; <a href="${FORM_URL}" target="_blank">VA Form 10-10176 (Gulf War Registry)</a></p></div>`;
+
+  h+=`<div class="export-bar"><h4>Download Your Results</h4><div class="export-btns">
+    <button class="exp-btn" id="expPDF">\u{1F5A8} Print / Save as PDF</button>
+    <button class="exp-btn" id="expHTML">\u{1F4C4} Save as HTML</button>
+    <button class="exp-btn" id="expDOC">\u{1F4DD} Save as Word (.doc)</button>
+    <button class="exp-btn" id="expTXT">\u{1F4CB} Save as Plain Text</button>
+  </div><p style="font-size:11px;color:#6B7280;margin-top:8px">Print/PDF uses your browser's built-in print dialog. Select "Save as PDF" as the destination. Word format opens in Microsoft Word, LibreOffice, or Google Docs.</p></div>`;
+
+  h+=`<div style="margin-top:16px"><button class="btn btn-s" id="restart">Start Over</button></div>`;
+
+  d.innerHTML=h;
+  let rb=document.getElementById("restart"); if(rb) rb.onclick=()=>{ state={step:0,sel:[],ev:{},status:"none",t75:false,wriisc:false,reg:false,catF:"All"}; render(); };
+
+  document.getElementById("expPDF").onclick=()=>{ window.print(); };
+
+  document.getElementById("expTXT").onclick=()=>{
+    let txt = buildPlainText();
+    downloadFile(txt, "claims_pathway_analysis.txt", "text/plain");
+  };
+
+  document.getElementById("expHTML").onclick=()=>{
+    let content = document.getElementById("step3").innerHTML;
+    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Claims Pathway Analysis</title><style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:24px;color:#111827;font-size:14px;line-height:1.6}h2{font-size:18px;color:#1E3A5F}h3{font-size:16px;margin:12px 0 6px}.alert{padding:14px;margin:12px 0;border:1px solid #ccc;border-radius:5px}.cond-card{border:1px solid #ccc;padding:16px;margin:14px 0;border-radius:5px}.dbq-intel{background:#F8FAFC;padding:10px;margin:6px 0;border-left:3px solid #3B82F6}.secondary-box{background:#FFFBEB;padding:6px 10px;margin:6px 0;border-left:3px solid #D97706;font-size:12px}.note-box{background:#F9FAFB;padding:6px 10px;margin:6px 0;border-left:3px solid #9CA3AF;font-size:12px}.export-bar,.export-btns{display:none}a{color:#1D4ED8}</style></head><body>${content}<p style="margin-top:24px;font-size:11px;color:#999">Generated by Gulf War Veterans Claims Pathway Adviser. Not legal advice.</p></body></html>`;
+    downloadFile(html, "claims_pathway_analysis.html", "text/html");
+  };
+
+  document.getElementById("expDOC").onclick=()=>{
+    let content = document.getElementById("step3").innerHTML;
+    let doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><title>Claims Pathway Analysis</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--><style>body{font-family:Calibri,sans-serif;font-size:11pt;color:#111;max-width:7.5in;margin:0.5in}h2{font-size:16pt;color:#1E3A5F}h3{font-size:14pt;margin-top:14pt}h4{font-size:11pt;font-weight:bold}.alert{padding:10pt;margin:10pt 0;border:1pt solid #999}.cond-card{padding:12pt;margin:12pt 0;border:1pt solid #999}.dbq-intel{background:#F0F4FF;padding:8pt;margin:6pt 0;border-left:3pt solid #3B82F6}.secondary-box{background:#FFFBEB;padding:6pt;margin:6pt 0;border-left:3pt solid #D97706;font-size:10pt}.note-box{background:#F5F5F5;padding:6pt;margin:6pt 0;border-left:3pt solid #999;font-size:10pt}.export-bar,.export-btns{display:none}a{color:#1D4ED8}</style></head><body>${content}<p style="margin-top:20pt;font-size:9pt;color:#999">Generated by Gulf War Veterans Claims Pathway Adviser. Not legal advice.</p></body></html>`;
+    downloadFile(doc, "claims_pathway_analysis.doc", "application/msword");
+  };
+}
+
+function downloadFile(content, filename, mimeType){
+  let blob = new Blob([content], {type: mimeType+";charset=utf-8"});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildPlainText(){
+  let lines = [];
+  lines.push("GULF WAR VETERANS CLAIMS PATHWAY ANALYSIS");
+  lines.push("Generated: " + new Date().toLocaleDateString());
+  lines.push("This is informational guidance, not legal advice.");
+  lines.push("Consult a Veterans Service Officer or accredited claims attorney.");
+  lines.push("");
+  lines.push("=" .repeat(60));
+
+  if(state.t75){
+    lines.push("");
+    lines.push("WARNING: ICD-10-CM CODE T75.830 IN RECORD");
+    lines.push("No VA rating schedule attached. No DBQ criteria. No adjudication guidance.");
+    lines.push("An examiner could interpret this as a known clinical diagnosis, closing the");
+    lines.push("undiagnosed illness pathway. Discuss with VSO or attorney before filing.");
+  }
+
+  if(state.status==="receiving_undiagnosed"&&state.sel.some(id=>(state.ev[id]||{}).diagnosed)){
+    lines.push("");
+    lines.push("WARNING: DIAGNOSTIC IMPERATIVE");
+    lines.push("Currently receiving under undiagnosed illness pathway but one or more");
+    lines.push("conditions now carry a diagnosis. This could affect existing benefits.");
+    lines.push("The MUCMI pathway may accommodate diagnosed conditions. Consult VSO/attorney.");
+  }
+
+  if(state.status==="denied"){
+    lines.push("");
+    lines.push("NOTE: PREVIOUSLY DENIED CLAIM");
+    lines.push("GAO-17-511 documented that denial letters often failed to explain whether");
+    lines.push("both direct and presumptive service connection methods were considered.");
+    lines.push("Review your denial letter. Supplemental claim or Higher Level Review may apply.");
+  }
+
+  if(!state.reg){
+    lines.push("");
+    lines.push("RECOMMENDED: GULF WAR REGISTRY EXAMINATION");
+    lines.push("Free clinical examination available at any VA medical center.");
+    lines.push("Generates documented medical evidence in VA's system.");
+    lines.push("Does not affect existing benefits. Form: VA 10-10176");
+    lines.push("Download: " + FORM_URL);
+  }
+
+  state.sel.forEach(id=>{
+    let info=C.find(c=>c.id===id), e=state.ev[id]||{}, {p:paths,n:notes}=getPaths(id);
+    lines.push("");
+    lines.push("-".repeat(60));
+    lines.push((info.m?"[MUCMI] ":"") + info.label.toUpperCase());
+    lines.push("Evidence: " + [e.diagnosed?"Diagnosed":"Not diagnosed",e.nexus?"Nexus on file":"No nexus",e.labWork?"Testing done":"No testing"].join(" | "));
+    if(info.dbq) lines.push("DBQ: " + VA + info.dbq);
+    else lines.push("DBQ: Restricted (VA examiner only)");
+    lines.push("");
+    paths.forEach(pw=>{
+      lines.push("  PATHWAY: " + pw.name + " [" + STR[pw.str].l + "]");
+      lines.push("  " + pw.d);
+      lines.push("");
+    });
+    lines.push("  REQUIRED TESTING:");
+    lines.push("  " + info.test);
+    lines.push("");
+    lines.push("  WHAT DRIVES THE RATING:");
+    lines.push("  " + info.rate);
+    if(info.sec&&info.sec.length){
+      lines.push("");
+      lines.push("  SECONDARY CONDITIONS: " + info.sec.join(", "));
+    }
+    notes.forEach(n=>{ lines.push(""); lines.push("  NOTE: " + n); });
+  });
+
+  lines.push("");
+  lines.push("=".repeat(60));
+  lines.push("REGULATORY REFERENCES");
+  lines.push("38 C.F.R. Section 3.317 | 38 U.S.C. Section 1117");
+  lines.push("38 C.F.R. Section 3.304(f) (PTSD)");
+  lines.push("GAO-17-511 (June 2017)");
+  lines.push("VAOIG-22-02194-152 (September 2023)");
+  lines.push("VAOIG-23-03485-03 (2025)");
+  lines.push("PACT Act, Pub. L. No. 117-168 (2022)");
+  lines.push("VA Public DBQ Page: " + DBQ_PAGE);
+  lines.push("VA Form 10-10176: " + FORM_URL);
+
+  return lines.join("\n");
+}
+
+render();
+</script>
+</body>
+</html>
